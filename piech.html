@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta tags for responsive design -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electricity Consumption Analysis</title>
+    
+    <!-- Chart.js CDN for pie chart functionality -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        /* Container for the entire content */
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            max-width: 900px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        /* Title Styling */
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+        
+        /* Chart Container */
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+        
+        /* Responsive Design for Mobile */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+                margin-bottom: 20px;
+            }
+            
+            .chart-container {
+                height: 300px;
+                padding: 10px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.2rem;
+            }
+            
+            .chart-container {
+                height: 250px;
+            }
+        }
+        
+        /* Info text styling */
+        .info {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 20px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Page Title -->
+        <h1>Weekly Electricity Usage by Home Appliances</h1>
+        
+        <!-- Chart Canvas Container -->
+        <div class="chart-container">
+            <canvas id="electricityChart"></canvas>
+        </div>
+        
+        <!-- Additional Info -->
+        <p class="info">Data represents weekly electricity consumption in kilowatt-hours (kWh)</p>
+    </div>
+
+    <script>
+        // ============================================
+        // SAMPLE DATA: Weekly Electricity Usage (in kWh)
+        // ============================================
+        // This data represents the weekly electricity consumption for each appliance
+        const electricityData = {
+            labels: [
+                'Washing Machine',
+                'Fan',
+                'Microwave Oven',
+                'Air Conditioner',
+                'Refrigerator',
+                'Television',
+                'Iron Box',
+                'Water Heater'
+            ],
+            // Weekly consumption values in kWh (kilowatt-hours)
+            data: [
+                15,   // Washing Machine: 15 kWh per week
+                12,   // Fan: 12 kWh per week
+                8,    // Microwave Oven: 8 kWh per week
+                45,   // Air Conditioner: 45 kWh per week (highest)
+                25,   // Refrigerator: 25 kWh per week
+                10,   // Television: 10 kWh per week
+                5,    // Iron Box: 5 kWh per week (lowest)
+                30    // Water Heater: 30 kWh per week
+            ],
+            // Color palette for each appliance (distinct colors)
+            colors: [
+                '#FF6384',  // Washing Machine - Pink/Red
+                '#36A2EB',  // Fan - Blue
+                '#FFCE56',  // Microwave Oven - Yellow
+                '#4BC0C0',  // Air Conditioner - Teal
+                '#9966FF',  // Refrigerator - Purple
+                '#FF9F40',  // Television - Orange
+                '#FF6384',  // Iron Box - Light Pink (different shade)
+                '#C9CBCF'   // Water Heater - Gray
+            ]
+        };
+
+        // ============================================
+        // CHART.JS CONFIGURATION
+        // ============================================
+        
+        // Get the canvas element where the chart will be rendered
+        const ctx = document.getElementById('electricityChart').getContext('2d');
+        
+        // Create the Pie Chart using Chart.js
+        const electricityChart = new Chart(ctx, {
+            type: 'pie',  // Chart type: Pie Chart
+            data: {
+                labels: electricityData.labels,  // Appliance names for legend
+                datasets: [{
+                    label: 'Weekly Electricity Usage (kWh)',  // Dataset label
+                    data: electricityData.data,  // Consumption values
+                    backgroundColor: electricityData.colors,  // Background colors for each slice
+                    borderColor: '#fff',  // White border between slices
+                    borderWidth: 2  // Border width for better visual separation
+                }]
+            },
+            options: {
+                // Responsive configuration
+                responsive: true,  // Make chart responsive
+                maintainAspectRatio: true,  // Maintain aspect ratio
+                
+                // Plugin configuration for legend and tooltips
+                plugins: {
+                    // Legend configuration (appliance names)
+                    legend: {
+                        position: 'bottom',  // Position legend at bottom
+                        labels: {
+                            padding: 15,  // Spacing between legend items
+                            font: {
+                                size: 12  // Font size for legend labels
+                            },
+                            usePointStyle: true  // Use point style for legend markers
+                        }
+                    },
+                    // Tooltip configuration (shows on hover)
+                    tooltip: {
+                        callbacks: {
+                            // Custom label showing both kWh and percentage
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                const value = context.parsed;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = ((value / total) * 100).toFixed(1);
+                                label += value + ' kWh (' + percentage + '%)';
+                                return label;
+                            }
+                        },
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',  // Dark background for tooltip
+                        padding: 10,  // Padding inside tooltip
+                        titleFont: {
+                            size: 14  // Tooltip title font size
+                        },
+                        bodyFont: {
+                            size: 12  // Tooltip body font size
+                        }
+                    }
+                },
+                
+                // Animation settings
+                animation: {
+                    animateRotate: true,  // Animate rotation when chart loads
+                    animateScale: true,  // Animate scaling effect
+                    duration: 1500  // Animation duration in milliseconds
+                }
+            }
+        });
+
+        // ============================================
+        // RESPONSIVE HANDLING
+        // ============================================
+        // Adjust chart size on window resize for better mobile experience
+        window.addEventListener('resize', function() {
+            electricityChart.resize();  // Resize chart when window is resized
+        });
+    </script>
+</body>
+</html>
