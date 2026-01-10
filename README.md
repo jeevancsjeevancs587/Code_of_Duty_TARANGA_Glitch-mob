@@ -43,21 +43,15 @@ Describe your solution clearly:
 ## ⚙️ Technology Stack
 
 List the tools and technologies used:
-- Programming Languages  
-- Frameworks / Libraries  
-- Tools / Platforms  
-
-Example:
-- HTML, CSS, JavaScript  
-- React / Flutter / Node.js  
-- Firebase / APIs (if any)
+- Programming Languages : html,css,javascript 
+- Tools / Platforms : chat gpt, claude ai
 
 ---
 
 ## 🖥️ Implementation Details
 
 Explain how your project works:
-- Overall workflow
+- Overall workflow 
 - Key features implemented
 - Any challenges faced and how you solved them
 
