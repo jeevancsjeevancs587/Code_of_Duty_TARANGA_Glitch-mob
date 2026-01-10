@@ -8,15 +8,15 @@
 
 ## 📌 Team Information
 
-- **Team Name:**  
+- **Team Name:*GLITCH MOB*  
 - **Team Members:**  
-  - Member 1 – Register No  
-  - Member 2 – Register No  
-  - Member 3 – Register No  
-  - Member 4 – Register No (if applicable)
+  - JEEVAN C S – NSS24EC081
+  - SUJITH P – Register No  
+  - P SAJAI KRISHNA – Register No  
+  - ABINKRISHNA K K – Register No (if applicable)
 
-- **Problem Domain:**  
-- **Selected Problem Statement:**  
+- **Problem Domain:*Smart Resource Management & Sustainability*  
+- **Selected Problem Statement:*Water and electricity wastage occurs due to lack of awareness and absence of clear usage insights at the consumer level.The issue lies in users not having simple and understandable visibility into how much water and electricity they consume, leading to inefficient and excessive usage of essential resources.*  
 
 ---
 
