@@ -67,8 +67,8 @@ Explain how your project works:
 Add screenshots of your website or application inside the `screenshots/` folder.
 
 Mention them here:
-- Screenshot 1 – Description  
-- Screenshot 2 – Description  
+- Screenshot 1 – It shows the menu of different home appliances  
+- Screenshot 2 – It shows the user interface  
 
 *(Screenshots are mandatory for evaluation)*
 
