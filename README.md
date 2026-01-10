@@ -24,15 +24,19 @@
 
 Briefly describe the problem you are addressing.  
 Explain the background and why this problem is relevant.
+Water and electricity wastage is a common issue at the consumer level due to the lack of awareness and clear visibility into actual usage. Most users receive consumption information only through periodic bills, which do not provide detailed or real-time insights. As a result, people are unable to understand how much water and electricity they consume on a daily basis or identify where wastage occurs, leading to inefficient and excessive use of essential resources.
 
 ---
 
 ## 💡 Proposed Solution
 
 Describe your solution clearly:
-- What is your approach? GIVE WARNINGS BY ANALYSING ELECTRICITY USAGE BY EACH HOME APLLIANCES AND CONTINUOUSLY MONITORING WATER USAGE AND TANK LEVEL
+- What is your approach? Give warnings by analyzing electricity usage by each home appliances and continuously monitoring water usage and tank level
 - How does it solve the problem?
-- Key idea behind the solution.
+- The solution provides clear, real-time visibility of water and electricity usage through simple dashboards and alerts, helping users identify and reduce wastage.
+- Key idea behind the solution:
+- Making consumption data easy to understand increases user awareness and encourages efficient and responsible resource usage.
+-                    
 
 ---
 
