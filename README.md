@@ -11,9 +11,9 @@
 - **Team Name:*GLITCH MOB*  
 - **Team Members:**  
   - JEEVAN C S – NSS24EC081
-  - SUJITH P – Register No  
-  - P SAJAI KRISHNA – Register No  
-  - ABINKRISHNA K K – Register No (if applicable)
+  - SUJITH P – NSS24EC131 
+  - P SAJAI KRISHNA – NSS24EC109 
+  - ABINKRISHNA K K – NSS24EC105
 
 - **Problem Domain:*Smart Resource Management & Sustainability*  
 - **Selected Problem Statement:*Water and electricity wastage occurs due to lack of awareness and absence of clear usage insights at the consumer level.The issue lies in users not having simple and understandable visibility into how much water and electricity they consume, leading to inefficient and excessive usage of essential resources.*  
@@ -30,7 +30,7 @@ Explain the background and why this problem is relevant.
 ## 💡 Proposed Solution
 
 Describe your solution clearly:
-- What is your approach?
+- What is your approach? GIVE WARNINGS BY ANALYSING ELECTRICITY USAGE BY EACH HOME APLLIANCES AND CONTINUOUSLY MONITORING WATER USAGE AND TANK LEVEL
 - How does it solve the problem?
 - Key idea behind the solution.
 
