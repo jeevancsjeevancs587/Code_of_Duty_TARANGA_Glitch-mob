@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Water Tank Level Monitor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: white;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2em;
+            text-align: center;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: #f8f8f8;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .card h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .tank-section {
+            text-align: center;
+        }
+
+        .tank-container {
+            position: relative;
+            width: 200px;
+            height: 300px;
+            border: 4px solid #333;
+            border-radius: 10px;
+            margin: 0 auto 30px;
+            overflow: hidden;
+            background: #f0f0f0;
+        }
+
+        .water {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            transition: all 0.5s ease;
+            border-radius: 0 0 6px 6px;
+        }
+
+        .water::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -50%;
+            width: 200%;
+            height: 20px;
+            background: inherit;
+            opacity: 0.6;
+            border-radius: 45%;
+            animation: wave 3s linear infinite;
+        }
+
+        @keyframes wave {
+            0% { transform: translateX(0) translateY(0); }
+            50% { transform: translateX(-25%) translateY(-5px); }
+            100% { transform: translateX(0) translateY(0); }
+        }
+
+        .level-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2em;
+            font-weight: bold;
+            color: #333;
+            text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+            z-index: 10;
+        }
+
+        .controls {
+            margin-bottom: 20px;
+        }
+
+        .slider {
+            width: 80%;
+            max-width: 300px;
+            height: 8px;
+            border-radius: 5px;
+            background: #ddd;
+            outline: none;
+            margin: 20px auto;
+            display: block;
+            cursor: pointer;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #4CAF50;
+            cursor: pointer;
+        }
+
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #4CAF50;
+            cursor: pointer;
+            border: none;
+        }
+
+        .status {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .alert-box {
+            background: #ff4444;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-weight: bold;
+            animation: pulse 1s infinite;
+            display: none;
+        }
+
+        .alert-box.show {
+            display: block;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+            font-size: 1.1em;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-item .value {
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        .legend {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9em;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+            border: 1px solid #333;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .stat-card h3 {
+            font-size: 2.5em;
+            margin-bottom: 5px;
+        }
+
+        .stat-card p {
+            font-size: 1em;
+            opacity: 0.9;
+        }
+
+
+
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: background 0.3s ease;
+            margin: 5px;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        button.secondary {
+            background: #2196F3;
+        }
+
+        button.secondary:hover {
+            background: #0b7dda;
+        }
+
+        .history-list {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+
+        .history-item {
+            padding: 8px;
+            background: white;
+            margin: 5px 0;
+            border-radius: 5px;
+            border-left: 4px solid #4CAF50;
+            font-size: 0.9em;
+        }
+
+        .center-buttons {
+            text-align: center;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌊 Water Tank Management System</h1>
+        
+        <div class="dashboard">
+            <div class="card">
+                <h2>📊 Daily Statistics</h2>
+                <div class="stat-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <h3 id="fillCount">0</h3>
+                    <p>Tank Fills Today</p>
+                </div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                    <h3 id="totalUsage">0</h3>
+                    <p>Liters Used Today</p>
+                </div>
+                <div class="center-buttons">
+                    <button onclick="resetDailyStats()">Reset Daily Stats</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>💧 Current Tank Status</h2>
+                <div class="tank-section">
+                    <div class="tank-container">
+                        <div class="water" id="water"></div>
+                        <div class="level-text" id="levelText">0%</div>
+                    </div>
+                    
+                    <div class="controls">
+                        <label for="levelSlider"><strong>Adjust Water Level:</strong></label>
+                        <input type="range" min="0" max="100" value="50" class="slider" id="levelSlider">
+                    </div>
+                    
+                    <div class="status" id="status">Medium Level</div>
+                    
+                    <div class="alert-box" id="alertBox">
+                        ⚠️ CRITICAL: Water level too low! Immediate action required!
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="card">
+                <h2>ℹ️ Tank Information</h2>
+                <div class="info-item">
+                    <span>Current Level:</span>
+                    <span class="value" id="currentLevel">50%</span>
+                </div>
+                <div class="info-item">
+                    <span>Tank Capacity:</span>
+                    <span class="value">1000 Liters</span>
+                </div>
+                <div class="info-item">
+                    <span>Current Volume:</span>
+                    <span class="value" id="currentVolume">500 Liters</span>
+                </div>
+                <div class="info-item">
+                    <span>Average Daily Usage:</span>
+                    <span class="value" id="avgUsage">0 L/day</span>
+                </div>
+                <div class="info-item">
+                    <span>Usage Rate:</span>
+                    <span class="value" id="usageRate">Normal</span>
+                </div>
+
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #4CAF50;"></div>
+                        <span>High (>70%)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #FFC107;"></div>
+                        <span>Medium (30-70%)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #FF9800;"></div>
+                        <span>Low (15-30%)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #F44336;"></div>
+                        <span>Too Low (<15%)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📜 Fill History (Today)</h2>
+            <div class="history-list" id="historyList">
+                <p style="text-align: center; color: #999;">No fills recorded today</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let previousLevel = 50;
+        let fillCount = 0;
+        let totalUsageToday = 0;
+        let fillHistory = [];
+
+        const TANK_CAPACITY = 1000; // liters
+        const FILL_THRESHOLD = 90; // Consider tank filled when reaches 90%+
+
+        const slider = document.getElementById('levelSlider');
+        const water = document.getElementById('water');
+        const levelText = document.getElementById('levelText');
+        const status = document.getElementById('status');
+        const alertBox = document.getElementById('alertBox');
+        const currentLevel = document.getElementById('currentLevel');
+        const currentVolume = document.getElementById('currentVolume');
+
+        function updateWaterLevel(level) {
+            const height = level;
+            water.style.height = height + '%';
+            levelText.textContent = level + '%';
+            currentLevel.textContent = level + '%';
+            currentVolume.textContent = (level * 10) + ' Liters';
+
+            // Check if tank was filled
+            if (level >= FILL_THRESHOLD && previousLevel < FILL_THRESHOLD) {
+                fillCount++;
+                recordFill(level);
+                updateFillCount();
+            }
+
+            // Calculate water consumed
+            if (level < previousLevel) {
+                const consumed = (previousLevel - level) * 10; // Convert to liters
+                totalUsageToday += consumed;
+                updateTotalUsage();
+            }
+
+            previousLevel = level;
+
+            // Color coding based on level
+            if (level > 70) {
+                water.style.background = '#4CAF50';
+                status.style.background = '#C8E6C9';
+                status.style.color = '#2E7D32';
+                status.textContent = '✓ High Level - Tank is well filled';
+                alertBox.classList.remove('show');
+            } else if (level >= 30 && level <= 70) {
+                water.style.background = '#FFC107';
+                status.style.background = '#FFF9C4';
+                status.style.color = '#F57F17';
+                status.textContent = '◉ Medium Level - Normal operation';
+                alertBox.classList.remove('show');
+            } else if (level >= 15 && level < 30) {
+                water.style.background = '#FF9800';
+                status.style.background = '#FFE0B2';
+                status.style.color = '#E65100';
+                status.textContent = '⚠ Low Level - Refill recommended';
+                alertBox.classList.remove('show');
+            } else {
+                water.style.background = '#F44336';
+                status.style.background = '#FFCDD2';
+                status.style.color = '#C62828';
+                status.textContent = '⛔ Too Low - Critical!';
+                alertBox.classList.add('show');
+            }
+
+            updateUsageRate();
+        }
+
+        function updateFillCount() {
+            document.getElementById('fillCount').textContent = fillCount;
+        }
+
+        function updateTotalUsage() {
+            document.getElementById('totalUsage').textContent = Math.round(totalUsageToday);
+            document.getElementById('avgUsage').textContent = Math.round(totalUsageToday) + ' L/day';
+        }
+
+        function updateUsageRate() {
+            const rate = document.getElementById('usageRate');
+            if (totalUsageToday < 200) {
+                rate.textContent = 'Low';
+                rate.style.color = '#4CAF50';
+            } else if (totalUsageToday < 500) {
+                rate.textContent = 'Normal';
+                rate.style.color = '#FFC107';
+            } else if (totalUsageToday < 800) {
+                rate.textContent = 'High';
+                rate.style.color = '#FF9800';
+            } else {
+                rate.textContent = 'Very High';
+                rate.style.color = '#F44336';
+            }
+        }
+
+        function recordFill(level) {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            fillHistory.push({
+                time: timeString,
+                level: level
+            });
+            updateHistoryDisplay();
+        }
+
+        function updateHistoryDisplay() {
+            const historyList = document.getElementById('historyList');
+            if (fillHistory.length === 0) {
+                historyList.innerHTML = '<p style="text-align: center; color: #999;">No fills recorded today</p>';
+            } else {
+                historyList.innerHTML = fillHistory.map((fill, index) => 
+                    `<div class="history-item">Fill #${index + 1} at ${fill.time} - Reached ${fill.level}%</div>`
+                ).reverse().join('');
+            }
+        }
+
+
+
+        function resetDailyStats() {
+            if (confirm('Are you sure you want to reset all daily statistics?')) {
+                fillCount = 0;
+                totalUsageToday = 0;
+                fillHistory = [];
+
+                updateFillCount();
+                updateTotalUsage();
+                updateHistoryDisplay();
+                updateUsageRate();
+            }
+        }
+
+        slider.addEventListener('input', function() {
+            updateWaterLevel(parseInt(this.value));
+        });
+
+        // Initialize with default value
+        updateWaterLevel(50);
+    </script>
+</body>
+</html>
